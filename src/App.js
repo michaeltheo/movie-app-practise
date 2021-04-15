@@ -3,6 +3,7 @@ import React, { Component, useEffect, useState } from "react";
 import Nav from "./component/Nav";
 import SearchArea from "./component/SearchArea";
 import MovieList from "./component/MovieList";
+import Pagination from "./component/Pagination";
 
 class App extends Component {
   constructor() {
@@ -10,6 +11,8 @@ class App extends Component {
     this.state = {
       movies: [],
       searchTerm: "",
+      totalResults: 0,
+      currentPage: 1,
     };
     this.apiKey = process.env.REACT_APP_API;
   }
@@ -22,7 +25,10 @@ class App extends Component {
       .then((data) => data.json())
       .then((data) => {
         console.log(data);
-        this.setState({ movies: [...data.results] }); //spreading all content from this array to our movies array
+        this.setState({
+          movies: [...data.results],
+          totalResults: data.total_results,
+        }); //spreading all content from this array to our movies array
       });
   };
 
@@ -30,7 +36,19 @@ class App extends Component {
     this.setState({ searchTerm: e.target.value });
   };
 
+  nextPage = (pageNumber) => {
+    fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&query=${this.state.searchTerm}&page=${pageNumber}`
+    )
+      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        this.setState({ movies: [...data.results], currentPage: pageNumber }); //spreading all content from this array to our movies array
+      });
+  };
+
   render() {
+    const numberPages = Math.floor(this.state.totalResults / 20);
     return (
       <div className="App">
         <Nav />
@@ -39,6 +57,15 @@ class App extends Component {
           handleChange={this.handleChange}
         />
         <MovieList movies={this.state.movies} />
+        {this.state.totalResults > 20 ? (
+          <Pagination
+            pages={numberPages}
+            nextPage={this.nextPage}
+            currentPage={this.state.currentPage}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
   }
