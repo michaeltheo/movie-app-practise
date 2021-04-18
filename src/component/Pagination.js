@@ -16,7 +16,7 @@ const Pagination = (props) => {
   }
   return (
     <div className="container">
-      <div className="row">
+      <div className="row" className="center-align ">
         <ul className="pagination">
           {props.currentPage > 1 ? (
             <li
