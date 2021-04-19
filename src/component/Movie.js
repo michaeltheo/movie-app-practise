@@ -21,8 +21,9 @@ function Movie(props) {
         </div>
         <div className="card-content">
           <p>
-            <a href="#"></a>
-            View Details
+            <a href="#" onClick={() => props.viewMovieInfo(props.movieId)}>
+              View Details
+            </a>
           </p>
         </div>
       </div>

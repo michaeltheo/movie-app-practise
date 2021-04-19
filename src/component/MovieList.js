@@ -8,7 +8,12 @@ function MovieList(props) {
         <div className="col s12">
           {props.movies.map((movie, i) => {
             return (
-              <Movie key={i} image={movie.poster_path} /> //for every movie we map we create a movie
+              <Movie
+                key={i}
+                image={movie.poster_path}
+                viewMovieInfo={props.viewMovieInfo}
+                movieId={movie.id}
+              /> //for every movie we map we create a movie
             );
           })}
         </div>
